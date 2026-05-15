@@ -22,12 +22,18 @@
                 <i class="fas fa-wallet" style="color: #10B981; font-size: 24px;"></i>
                 <h1>SpendWise</h1>
             </div>
-            <div class="user-profile">
-                <div class="location-hint">
-                    <div>Amruth</div>
-                    <span>Bengaluru, India</span>
+            <div class="nav-actions">
+                <button class="btn-advisor" id="open-advisor">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Insights</span>
+                </button>
+                <div class="user-profile">
+                    <div class="location-hint">
+                        <div>Amruth</div>
+                        <span>Bengaluru, India</span>
+                    </div>
+                    <img src="https://i.pravatar.cc/150?u=amruth" alt="Avatar" class="avatar">
                 </div>
-                <img src="https://i.pravatar.cc/150?u=amruth" alt="Avatar" class="avatar">
             </div>
         </nav>
 
@@ -129,7 +135,7 @@
                 <div class="section-card animate-entry" style="animation-delay: 0.8s;">
                     <div class="section-header">
                         <h3>Recent Activity</h3>
-                        <a href="#" class="view-all">View All</a>
+                        <a href="./transactions.html" target="_blank" class="view-all">View All</a>
                     </div>
                     <ul class="transaction-list" id="list">
                         <!-- Items injected via JS -->
@@ -203,6 +209,29 @@
                 </div>
                 <button type="submit" class="btn-add">Add Expense</button>
             </form>
+        </div>
+    </div>
+
+    <!-- AI Advisor Modal -->
+    <div class="modal-overlay" id="advisor-overlay">
+        <div class="modal advisor-modal">
+            <div class="modal-header">
+                <div class="advisor-title">
+                    <i class="fas fa-robot"></i>
+                    <div>
+                        <h3>AI Financial Advisor</h3>
+                        <p>Professional behavioral analysis & 30-day plan</p>
+                    </div>
+                </div>
+                <i class="fas fa-times close-modal" id="close-advisor"></i>
+            </div>
+            <div class="advisor-content" id="advisor-report">
+                <!-- Report injected via JS -->
+                <div class="loading-advisor">
+                    <div class="spinner"></div>
+                    <p>Analyzing your spending patterns...</p>
+                </div>
+            </div>
         </div>
     </div>
 

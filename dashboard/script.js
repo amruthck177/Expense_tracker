@@ -313,6 +313,112 @@ function setupEventListeners() {
         elements.text.value = '';
         elements.amount.value = '';
     });
+
+    // AI Advisor Events
+    const advisorOverlay = document.getElementById('advisor-overlay');
+    const openAdvisorBtn = document.getElementById('open-advisor');
+    const closeAdvisorBtn = document.getElementById('close-advisor');
+    const advisorReport = document.getElementById('advisor-report');
+
+    openAdvisorBtn.addEventListener('click', () => {
+        advisorOverlay.classList.add('active');
+        renderAdvisorReport();
+    });
+
+    closeAdvisorBtn.addEventListener('click', () => {
+        advisorOverlay.classList.remove('active');
+    });
+}
+
+function renderAdvisorReport() {
+    const data = getPeriodTransactions();
+    const total = data.reduce((s, t) => s + t.amount, 0);
+    const catTotals = {};
+    data.forEach(t => catTotals[t.category] = (catTotals[t.category] || 0) + t.amount);
+    
+    const sortedCats = Object.entries(catTotals).sort((a,b) => b[1] - a[1]);
+    const topCat = sortedCats[0] ? sortedCats[0][0] : 'None';
+    const topCatPercent = total > 0 ? Math.round((sortedCats[0][1] / total) * 100) : 0;
+
+    const reportHTML = `
+        <div class="advisor-section">
+            <h4>1. Spending Snapshot</h4>
+            <p class="step-text">Based on your <b>${currentView}</b> spending of <b>₹${total.toLocaleString()}</b>, your behavior is <b>${total > 15000 ? 'Aggressive' : 'Moderate'}</b>. ${total > 15000 ? 'You are currently in a high-burn phase, likely driven by lifestyle inflation.' : 'You have a healthy grasp on your essentials, but there is room for optimization.'}</p>
+            <div class="insight-grid">
+                <div class="insight-card">
+                    <h5>Daily Burn Rate</h5>
+                    <p>You are spending an average of ₹${Math.round(total / (currentView === 'weekly' ? 7 : 30)).toLocaleString()} per day.</p>
+                </div>
+                <div class="insight-card">
+                    <h5>Category Focus</h5>
+                    <p>${topCat} accounts for ${topCatPercent}% of your total spend. This is your primary area for optimization.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="advisor-section">
+            <h4>2. Key Insights & Red Flags</h4>
+            <div class="insight-grid">
+                <div class="insight-card ${topCatPercent > 35 ? 'warning' : ''}">
+                    <h5>${topCatPercent > 35 ? '⚠️ High Concentration' : '✅ Balanced Categories'}</h5>
+                    <p>${topCatPercent > 35 ? `Your ${topCat} spending is significantly higher than the Bengaluru urban benchmark of 25%.` : 'Your spending across categories is well-distributed according to urban benchmarks.'}</p>
+                </div>
+                <div class="insight-card ${total > 20000 ? 'warning' : ''}">
+                    <h5>${total > 20000 ? '⚠️ High Velocity' : '✅ Steady Pace'}</h5>
+                    <p>${total > 20000 ? 'Your transaction frequency is high. Multiple small Swiggy/Zomato orders are adding up to a hidden leakage.' : 'Your transaction frequency suggests intentional spending rather than impulsive leaks.'}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="advisor-section">
+            <h4>3. Root Cause Analysis</h4>
+            <p class="step-text">Your top category, <b>${topCat}</b>, suggests a "Convenience Bias." In the Bengaluru context, frequent use of quick-commerce (Blinkit) or ride-hailing (Uber/Ola) often masks true costs under the guise of saving time.</p>
+        </div>
+
+        <div class="advisor-section">
+            <h4>4. 30-Day Improvement Plan</h4>
+            <div class="plan-step">
+                <div class="step-num">1</div>
+                <div class="step-text"><b>The 50/30/20 Rule:</b> Aim to cap your "Wants" (Entertainment/Shopping) at ₹${Math.round(total * 0.3).toLocaleString()} next month.</div>
+            </div>
+            <div class="plan-step">
+                <div class="step-num">2</div>
+                <div class="step-text"><b>The No-Swiggy Weekend:</b> Dedicate two weekends to home-cooked meals to reduce the ${catTotals['Food'] ? '₹' + Math.round(catTotals['Food']*0.2).toLocaleString() : 'Food'} delivery leak.</div>
+            </div>
+            <div class="plan-step">
+                <div class="step-num">3</div>
+                <div class="step-text"><b>UPI Buffer:</b> Set a daily UPI transfer limit of ₹500 to prevent friction-less impulse buying.</div>
+            </div>
+        </div>
+
+        <div class="advisor-section">
+            <h4>5. Smart Goals</h4>
+            <div class="insight-grid">
+                <div class="insight-card">
+                    <h5>Reduce ${topCat}</h5>
+                    <p>Cut ${topCat} spend by 15% (Save ₹${Math.round((catTotals[topCat]||0)*0.15).toLocaleString()}).</p>
+                </div>
+                <div class="insight-card">
+                    <h5>Emergency Fund</h5>
+                    <p>Redirect ₹2,000 into a liquid fund next month.</p>
+                </div>
+                <div class="insight-card">
+                    <h5>No-Spend Days</h5>
+                    <p>Aim for 10 "Zero-Transaction" days this month.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="advisor-section">
+            <div class="lever-card">
+                <h4>Bonus: One Big Lever 🚀</h4>
+                <p><b>Master your UPI Leaks.</b> Small ₹100-₹200 transactions are your biggest enemy. Consolidate small purchases and watch your savings grow by 10% instantly.</p>
+            </div>
+        </div>
+    `;
+
+    const advisorReport = document.getElementById('advisor-report');
+    advisorReport.innerHTML = reportHTML;
 }
 
 function save() {

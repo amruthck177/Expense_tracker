@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendWise | All Transactions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .transactions-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .filter-chip {
+            padding: 8px 16px;
+            background: var(--glass-inner);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+        .filter-chip.active {
+            background: var(--accent-emerald);
+            color: white;
+            border-color: var(--accent-emerald);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <div class="transactions-container">
+        <div class="header-row">
+            <div class="brand">
+                <i class="fas fa-history" style="color: var(--accent-emerald); font-size: 24px;"></i>
+                <h1 style="font-size: 24px; color: white; margin-left: 10px;">Transaction History</h1>
+            </div>
+            <a href="index.html" class="view-all" style="text-decoration: none;"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+        </div>
+
+        <div class="filter-bar" id="category-filters">
+            <div class="filter-chip active" data-category="All">All</div>
+            <!-- More chips injected -->
+        </div>
+
+        <div class="section-card">
+            <ul class="transaction-list" id="full-list" style="max-height: none;">
+                <!-- Full list injected -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const CATEGORIES = {
+            Food: { icon: 'fa-utensils', color: '#F87171' },
+            Transport: { icon: 'fa-car', color: '#FBBF24' },
+            Shopping: { icon: 'fa-shopping-bag', color: '#818CF8' },
+            Health: { icon: 'fa-heartbeat', color: '#34D399' },
+            Bills: { icon: 'fa-file-invoice-dollar', color: '#60A5FA' },
+            Entertainment: { icon: 'fa-film', color: '#F472B6' },
+            Other: { icon: 'fa-box', color: '#94A3B8' }
+        };
+
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        let activeFilter = 'All';
+
+        function render() {
+            const filtered = activeFilter === 'All' 
+                ? transactions 
+                : transactions.filter(t => t.category === activeFilter);
+            
+            const sorted = [...filtered].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            document.getElementById('full-list').innerHTML = sorted.map(t => `
+                <li class="transaction-item animate-entry" style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;">
+                    <div class="t-left">
+                        <div class="t-icon" style="background: ${CATEGORIES[t.category].color}20; color: ${CATEGORIES[t.category].color}">
+                            <i class="fas ${CATEGORIES[t.category].icon}"></i>
+                        </div>
+                        <div class="t-details">
+                            <h4>${t.text}</h4>
+                            <p>${new Date(t.date).toLocaleDateString('en-IN', {day: 'numeric', month: 'long', year: 'numeric'})} • <span class="t-badge">${t.paymentMethod || 'UPI'}</span></p>
+                        </div>
+                    </div>
+                    <div class="t-right">
+                        <div class="t-amount" style="font-size: 18px;">-₹${t.amount.toLocaleString()}</div>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        function initFilters() {
+            const bar = document.getElementById('category-filters');
+            Object.keys(CATEGORIES).forEach(cat => {
+                const chip = document.createElement('div');
+                chip.className = 'filter-chip';
+                chip.innerText = cat;
+                chip.dataset.category = cat;
+                chip.onclick = () => {
+                    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    activeFilter = cat;
+                    render();
+                };
+                bar.appendChild(chip);
+            });
+            
+            document.querySelector('[data-category="All"]').onclick = () => {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                document.querySelector('[data-category="All"]').classList.add('active');
+                activeFilter = 'All';
+                render();
+            };
+        }
+
+        initFilters();
+        render();
+    </script>
+</body>
+</html>
