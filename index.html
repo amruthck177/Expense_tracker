@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Finly | Luxury Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-shell">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="user-greeting">
+                <span class="sub-text">Good morning,</span>
+                <h1 class="main-title">Amruth</h1>
+            </div>
+            <div class="header-actions">
+                <div class="icon-btn" id="open-appearance">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="avatar-box">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Amruth" alt="Profile">
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard -->
+        <main class="dashboard-content">
+            <!-- Balance Card -->
+            <div class="balance-card glass animate">
+                <div class="card-header">
+                    <span class="label">Current Balance</span>
+                    <i class="fas fa-ellipsis-v"></i>
+                </div>
+                <h2 class="balance-amount">₹1,24,580</h2>
+                <div class="balance-stats">
+                    <span class="savings-pill">Net Savings +₹18,450 (14.8%)</span>
+                </div>
+                <div class="card-glow"></div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-item glass animate" style="animation-delay: 0.1s;">
+                    <span class="stat-label">Today</span>
+                    <span class="stat-value">₹12,450</span>
+                </div>
+                <div class="stat-item glass animate" style="animation-delay: 0.2s;">
+                    <span class="stat-label">This Week</span>
+                    <span class="stat-value">₹87,150</span>
+                </div>
+                <div class="stat-item glass animate" style="animation-delay: 0.3s;">
+                    <span class="stat-label">Avg Daily</span>
+                    <span class="stat-value">₹12,450</span>
+                </div>
+                <div class="stat-item glass animate" style="animation-delay: 0.4s;">
+                    <span class="stat-label">Tx</span>
+                    <span class="stat-value">12</span>
+                </div>
+            </div>
+
+            <!-- Budget Rings & Charts -->
+            <div class="visual-section">
+                <div class="section-header">
+                    <h3>Budget Overview</h3>
+                    <a href="#" class="link-text">Details</a>
+                </div>
+                <div class="rings-container glass animate" style="animation-delay: 0.5s;">
+                    <div class="chart-box">
+                        <canvas id="budget-donut"></canvas>
+                        <div class="chart-center">
+                            <span class="percentage">72%</span>
+                            <span class="label">Total</span>
+                        </div>
+                    </div>
+                    <div class="rings-labels">
+                        <div class="label-item"><span class="dot" style="background: var(--accent-blue);"></span> Shopping</div>
+                        <div class="label-item"><span class="dot" style="background: var(--accent-green);"></span> Food</div>
+                        <div class="label-item"><span class="dot" style="background: var(--accent-red);"></span> Rent</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spending Trend -->
+            <div class="visual-section">
+                <div class="section-header">
+                    <h3>Spending Trend</h3>
+                </div>
+                <div class="trend-card glass animate" style="animation-delay: 0.6s;">
+                    <canvas id="trend-line-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="visual-section">
+                <div class="section-header">
+                    <h3>Recent Transactions</h3>
+                    <a href="#" class="link-text">View All</a>
+                </div>
+                <div class="tx-list" id="recent-tx-list">
+                    <!-- Transactions injected by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav glass">
+            <div class="nav-item active" data-tab="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" data-tab="calendar">
+                <i class="fas fa-calendar"></i>
+                <span>Calendar</span>
+            </div>
+            <div class="nav-item fab-center">
+                <div class="fab-btn" id="open-add-modal">
+                    <i class="fas fa-plus"></i>
+                </div>
+            </div>
+            <div class="nav-item" data-tab="budgets">
+                <i class="fas fa-wallet"></i>
+                <span>Budgets</span>
+            </div>
+            <div class="nav-item" data-tab="reports">
+                <i class="fas fa-chart-pie"></i>
+                <span>Reports</span>
+            </div>
+        </nav>
+
+        <!-- Theme Bottom Sheet -->
+        <div class="bottom-sheet-overlay" id="appearance-sheet">
+            <div class="bottom-sheet">
+                <div class="sheet-handle"></div>
+                <div class="sheet-content">
+                    <h2 class="sheet-title">Appearance</h2>
+                    <div class="theme-grid">
+                        <div class="theme-option active" data-theme="dark">
+                            <div class="theme-preview dark">
+                                <div class="p-card"></div>
+                                <div class="p-line"></div>
+                            </div>
+                            <span class="theme-name">Dark Mode</span>
+                        </div>
+                        <div class="theme-option" data-theme="light">
+                            <div class="theme-preview light">
+                                <div class="p-card"></div>
+                                <div class="p-line"></div>
+                            </div>
+                            <span class="theme-name">Light Mode</span>
+                        </div>
+                        <div class="theme-option" data-theme="gray">
+                            <div class="theme-preview gray">
+                                <div class="p-card"></div>
+                                <div class="p-line"></div>
+                            </div>
+                            <span class="theme-name">Default Gray</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
